@@ -1,0 +1,14 @@
+SELECT column1 AS 'key1', column2 AS 'key2', column3 AS 'key3'
+FROM my_table
+FOR XML PATH('row'), ELEMENTS, TYPE, ROOT('root')
+
+
+SELECT JSON_QUERY(
+    REPLACE(
+        (SELECT column1 AS 'key1', column2 AS 'key2', column3 AS 'key3'
+         FROM my_table
+         FOR XML PATH('row'), ELEMENTS, TYPE, ROOT('root')
+        ).value('.', 'NVARCHAR(MAX)'), 
+        '</root><row>', ','
+    )
+) AS 'json_output'
